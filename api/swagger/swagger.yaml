@@ -14,9 +14,11 @@ schemes:
 # format of bodies a client can send (Content-Type)
 consumes:
   - application/json
+  - application/xml
 # format of the responses to the client (Accepts)
 produces:
   - application/json
+  - application/xml
 paths:
   /hello:
     # binds a127 app logic to a route
@@ -35,29 +37,35 @@ paths:
         "200":
           description: Success
           schema:
-            # a pointer to a definition
             $ref: "#/definitions/HelloWorldResponse"
         # responses may fall through to errors
         default:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-  /goodbye:
-    x-swagger-router-controller: hello_world
+  /mec/{id}:
+    x-swagger-router-controller: mec
     get:
-      description: Returns "Goodbye" to the caller
-      operationId: goodbye
+      description: Returns an MEC resource to the requestor
+      operationId: getResource
       parameters:
-       - name: name
-         in: query
-         description: The name of the person to whom to say Goodbye
-         required: false
+       - in: path
+         name: id
+         description: 'An identifier uniquly identifying the desired resource. For Example: urn_dece_cid_eidr-s_0000-1111-2222-3333-TEST-3'
+         required: true
          type: string
+      produces:
+        - application/xml
+        - plain/text
       responses:
         "200":
           description: Success
           schema:
-            $ref: "#definitions/HelloWorldResponse"
+            type: string
+        "404":
+          description: Resource was not found
+          schema:
+            type: string
         # responses may fall through to errors
         default:
           description: Error

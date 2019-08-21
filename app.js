@@ -1,4 +1,4 @@
-const SwaggerExpress = require('swagger-express-mw');
+const SwaggerExpress = require('swagger-express-mw'); // https://github.com/swagger-api/swagger-node
 const app = require('express')();
 
 
