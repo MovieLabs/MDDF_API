@@ -51,7 +51,7 @@ paths:
       parameters:
        - in: path
          name: id
-         description: 'An identifier uniquly identifying the desired resource. For Example: urn_dece_cid_eidr-s_0000-1111-2222-3333-TEST-3'
+         description: 'An identifier uniquely identifying the desired resource. For Example: urn_dece_cid_eidr-s_0000-1111-2222-3333-TEST-3'
          required: true
          type: string
       produces:
