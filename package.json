@@ -1,22 +1,24 @@
 {
-  "name": "MDDF_API",
-  "version": "0.0.1",
+  "name": "mddf-api-3",
+  "version": "0.0.0",
   "private": true,
-  "description": "New Swagger API Project",
-  "keywords": [],
-  "author": "",
-  "license": "",
-  "main": "app.js",
-  "dependencies": {
-    "express": "^4.12.3",
-    "swagger-express-mw": "^0.1.0"
-  },
-  "devDependencies": {
-    "should": "^7.1.0",
-    "supertest": "^1.0.0"
-  },
   "scripts": {
-    "start": "node app.js",
-    "test": "swagger project test"
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cookie-parser": "~1.4.3",
+    "debug": "^4.1.1",
+    "dotenv": "^8.1.0",
+    "express": "^4.17.1",
+    "express-openapi": "^4.6.5",
+    "express-xml-bodyparser": "^0.3.0",
+    "http-errors": "^1.7.3",
+    "morgan": "~1.9.0",
+    "node-fetch": "^2.6.0",
+    "pug": "^2.0.4",
+    "swagger-ui-express": "^4.0.7",
+    "xml-js": "^1.6.11",
+    "yamljs": "^0.3.0"
   }
 }

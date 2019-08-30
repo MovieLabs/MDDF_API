@@ -1,0 +1,214 @@
+openapi: 3.0.1
+info:
+  version: 1.0.0
+  title: MDDF-API
+  description: "API for sending and delivering MDDF metadata and Avails"
+  termsOfService: ''
+  contact:
+    name: MovieLbas
+    email: help@movielabs.com
+    url: www.movielabs.com
+  license:
+    name: Apache 2.0
+servers:
+  - url: http://mddf.mlmap.com/mddf/v1
+  - url: http://localhost:4020/mddf/v1
+tags:
+  - name: MEC Operations
+    description: "Retrieve Media Entertainment Core metadata"
+  - name: Avails Operations
+    description: "Add, remove and retrieve avails information for a given resource"
+  - name: Ancillary Operations
+    description: "Additional API's useful in development - likely removed in final version"
+paths:
+  '/mec/{contentId}':
+    get:
+      tags:
+        - MEC Operations
+      description: "Returns an MEC resource to the requester"
+      operationId: mecGetResource
+      parameters:
+        - $ref: '#/components/parameters/contentId'
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/mecResource"
+        '404':
+          description: Resource not found
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/404"
+    post:
+      tags:
+        - MEC Operations
+      description: "Given valid CoreMetadata the resources server will create a new resource associated with this endpoint  "
+      operationId: mecPostResource
+      parameters:
+        - $ref: "#/components/parameters/contentId"
+      requestBody:
+        description: 'MEC request body'
+        required: true
+        content:
+          application/xml:
+            schema:
+              type: string
+            example: '<?xml version="1.0" encoding="UTF-8"?>'
+      responses:
+        '201':
+          description: Successful
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/201"
+    put:
+      tags:
+        - MEC Operations
+      description: "Given valid CoreMetadata the resources server will update a resource associated with this endpoint  "
+      operationId: mecPutResource
+      parameters:
+        - $ref: "#/components/parameters/contentId"
+      requestBody:
+        $ref: "#/components/requestBodies/mecResource"
+      responses:
+        '200':
+          description: Successful
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/200"
+    delete:
+      tags:
+        - MEC Operations
+      description: "Given valid CoreMetadata the resources server will update a resource associated with this endpoint  "
+      operationId: mecDeleteResource
+      parameters:
+        - $ref: "#/components/parameters/contentId"
+      responses:
+        '200':
+          description: Successful
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/200"
+  '/artwork/{resourceId}':
+    get:
+      tags:
+        - Ancillary Operations
+      description: "Returns an Artwork resource to the requester"
+      operationId: artworkGetResource
+      parameters:
+        - name: "resourceId"
+          description: "An identifier that uniquely identifies the desired artwork resource"
+          example: "1BF1-A9C4-7D63-4A6C-E101-2.xml.de.192x288"
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful
+          content:
+            image/png:
+              schema:
+                $ref: "#/components/schemas/mecResource"
+        '404':
+          description: Resource not found
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/404"
+  '/mecmap/{contentId}':
+    get:
+      tags:
+        - Ancillary Operations
+      description: "If the content is not found, will also look for child works of the id"
+      operationId: mecMapResource
+      parameters:
+        - $ref: '#/components/parameters/contentId'
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/mecResource"
+        '404':
+          description: Resource not found
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/404"
+  '/search':
+    get:
+      tags:
+        - Ancillary Operations
+      description: "Conduct a fuzzy search of titles, by name, in the MEC route"
+      operationId: searchTitles
+      parameters:
+        - name: "searchQuery"
+          description: "String to fuzzy match to the titles in the MEC database"
+          example: "mission"
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/search"
+        '404':
+          description: Resource not found
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/404"
+components:
+  parameters:
+    contentId:
+      name: "contentId"
+      description: "An identifier that uniquely identifies the desired resource"
+      example: "urn_dece_cid_eidr-s_0000-1111-2222-3333-TEST-3"
+      in: path
+      required: true
+      schema:
+        type: string
+
+
+  requestBodies:
+    mecResource:
+      description: 'MEC request body'
+      required: true
+      content:
+        application/xml:
+          schema:
+            type: string
+          example: '<?xml version="1.0" encoding="UTF-8"?>'
+
+  schemas:
+    200:
+      type: string
+
+    201:
+      type: string
+
+    404:
+      title: "Resource does not exist"
+      type: string
+      example: "Resource not found"
+
+    mecResource:
+      type: string
+      example: '<?xml version="1.0" encoding="UTF-8"?>'
+
+    search:
+      type: array
+
+
+

@@ -7,7 +7,7 @@ const util = require('util');
   Param 2: a handle to the response object
  */
 function hello(req, res) {
-    // variables defined in the Swagger document can be referenced using req.swagger.params.{parameter_name}
+    // variables defined in the Swagger document can be referenced using req.docs-v1.params.{parameter_name}
     const name = req.swagger.params.name.value || 'stranger';
     const msg = util.format('Hello, %s!', name);
 
