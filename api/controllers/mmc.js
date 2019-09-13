@@ -1,12 +1,11 @@
 /**
- * Controllers for the Media Entertain Core (MEC) routes
+ * Controllers for the Media Manifest Core (MMC) routes
  *
  * @param res
  * @param req
  */
 
 const action = require('../../helpers/actions');
-const validate = require('../../helpers/validate');
 
 /**
  * Retrieve a specific MEC resource using http GET
@@ -14,14 +13,14 @@ const validate = require('../../helpers/validate');
  * @param req {object} - The express request object
  * @param res {object} - The express response object
  */
-function mecGetResource(req, res) {
+function mmcGetResource(req, res) {
     const { contentId } = req.params; // The content id of the requested resource
     const { database } = this.dependencies; // The injected database interface
 
     const params = {
         database,
         resourceId: contentId,
-        resourceType: 'mec',
+        resourceType: 'mmc',
         applicationType: 'xml',
         req,
         res,
@@ -39,7 +38,7 @@ function mecGetResource(req, res) {
  * @param req {object} - The express request object
  * @param res {object} - The express response object
  */
-function mecPutResource(req, res) {
+function mmcPutResource(req, res) {
     const { contentId } = req.params; // The content id of the resource to add
     const { database } = this.dependencies; // The injected database interface
     console.log(`Update the resource for: ${contentId}`);
@@ -48,7 +47,7 @@ function mecPutResource(req, res) {
         database,
         resource: req.body, // The XML data to be added
         resourceId: contentId,
-        resourceType: 'test',
+        resourceType: 'mmc',
         applicationType: 'xml',
         req,
         res,
@@ -60,7 +59,7 @@ function mecPutResource(req, res) {
  * @param req {object} - The express request object
  * @param res {object} - The express response object
  */
-function mecDeleteResource(req, res) {
+function mmcDeleteResource(req, res) {
     const { contentId } = req.params; // The content id of the resource to be deleted
     const { database } = this.dependencies; // The injected database interface
     console.log(`Delete the resource for: ${contentId}`);
@@ -68,7 +67,7 @@ function mecDeleteResource(req, res) {
     action.removeResource({
         database,
         resourceId: contentId,
-        resourceType: 'test',
+        resourceType: 'mmc',
         applicationType: 'xml',
         req,
         res,
@@ -80,7 +79,7 @@ function mecDeleteResource(req, res) {
  * @param req {object} - The express request object
  * @param res {object} - The express response object
  */
-function mecPostResource(req, res) {
+function mmcPostResource(req, res) {
     const { contentId } = req.params;
     const { database } = this.dependencies;
     console.log(`Create the resource for: ${contentId}`);
@@ -89,7 +88,7 @@ function mecPostResource(req, res) {
         database,
         resource: req.body,
         resourceId: contentId,
-        resourceType: 'test',
+        resourceType: 'mmc',
         applicationType: 'xml',
         req,
         res,
@@ -97,8 +96,8 @@ function mecPostResource(req, res) {
 }
 
 module.exports = {
-    mecGetResource,
-    mecPutResource,
-    mecDeleteResource,
-    mecPostResource,
+    mmcGetResource,
+    mmcPutResource,
+    mmcDeleteResource,
+    mmcPostResource,
 };

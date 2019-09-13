@@ -19,8 +19,7 @@ const mecController = require('./api/controllers/mec');
 const artworkController = require('./api/controllers/artwork');
 const mecMapController = require('./api/controllers/mec_map');
 const searchController = require('./api/controllers/search');
-const database = require('./database/database');
-const lookupEIDR = require('./database/lookup_eidr');
+const database = require('./helpers/database');
 
 const apiDoc = path.join(__dirname, './api/docs-v1/mddf-api-doc.yaml');
 console.log(apiDoc);
@@ -50,41 +49,81 @@ app.get('/', (req, res) => res.send('Hello World'));
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-// Initialize the route handlers to their controllers
-initialize({
-    app,
-    apiDoc,
-    dependencies: {
-        database,
-    },
-    operations: {
-        mecGetResource: mecController.mecGetResource,
-        mecPostResource: mecController.mecPostResource,
-        mecPutResource: mecController.mecPutResource,
-        mecDeleteResource: mecController.mecDeleteResource,
-        artworkGetResource: artworkController.artGetResource,
-        mecMapResource: mecMapController.mecMapResource,
-        searchTitles: searchController.getSearch,
-    },
-});
 
-// catch 404 and forward to error handler
-app.use(function (req, res, next) {
-    next(createError(404));
-});
+async function initApplication() {
+    const dbConfig = {
+        resourceEndpoints: {
+            mec: process.env.MEC_PATH,
+            mmc: process.env.MMC_PATH,
+            artwork: process.env.ARTWORK_PATH,
+            avails: process.env.AVAILS_PATH,
+            uv: process.env.UV_PATH,
+            test: process.env.TEST_PATH,
+        },
+        resourceMappings: {
+            mec: {
+                filePath: 'helpers/file_maps',
+                fileName: 'mecMap',
+                mapping: {},
+            },
+            mmc: {
+                filePath: 'helpers/file_maps',
+                fileName: 'mmcMap',
+                mapping: {},
+            },
+//            uv: {
+//                filePath: 'helpers/file_maps',
+//                fileName: 'uvFileMap',
+//                mapping: {},
+//            },
+            test: {
+                filePath: 'helpers/file_maps',
+                fileName: 'testMap',
+                mapping: {},
+            },
+        },
+    };
+
+    console.log('Setup the database');
+    const setupDB = await database.create(dbConfig);
+
+// Initialize the route handlers to their controllers
+    initialize({
+        app,
+        apiDoc,
+        dependencies: {
+            database: setupDB,
+        },
+        operations: {
+            mecGetCount: mecController.mecGetResource,
+            mecGetResource: mecController.mecGetResource,
+            mecPostResource: mecController.mecPostResource,
+            mecPutResource: mecController.mecPutResource,
+            mecDeleteResource: mecController.mecDeleteResource,
+            artworkGetResource: artworkController.artGetResource,
+            mecMapResource: mecMapController.mecMapResource,
+            searchTitles: searchController.getSearch,
+        },
+    });
+    console.log('Application Initilized');
+
+    // catch 404 and forward to error handler
+    app.use(function (req, res, next) {
+        next(createError(404));
+    });
 
 // error handler
-app.use(function (err, req, res, next) {
-    // set locals, only providing error in development
-    res.locals.message = err.message;
-    res.locals.error = req.app.get('env') === 'development' ? err : {};
+    app.use(function (err, req, res, next) {
+        // set locals, only providing error in development
+        res.locals.message = err.message;
+        res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-    // render the error page
-    res.status(err.status || 500);
-    res.render('error');
-});
+        // render the error page
+        res.status(err.status || 500);
+        res.render('error');
+    });
+}
 
-console.log('Start lookups');
-lookupEIDR();
+initApplication();
 
 module.exports = app;

@@ -11,7 +11,7 @@ const _normalizeStr = (str) => {
         throw 'Must use a string as argument to FuzzySet functions';
     }
     return str.trim()
-        .toLowerCase();
+              .toLowerCase();
 };
 
 // Sort array of results into descending order
@@ -88,7 +88,7 @@ function _gramCounter(value, gramSize) {
 }
 
 // the main functions
-fuzzyset.get = function (value, defaultValue, minMatchScore) {
+fuzzyset.get = function get(value, defaultValue, minMatchScore) {
     // check for value in set, returning defaultValue or null if none found
     const _minMatchScore = minMatchScore || 0.33;
     const result = this._get(value, _minMatchScore);
@@ -97,7 +97,7 @@ fuzzyset.get = function (value, defaultValue, minMatchScore) {
         : result;
 };
 
-fuzzyset._get = function (value, minMatchScore) {
+fuzzyset._get = function _get(value, minMatchScore) {
     const normalizedValue = _normalizeStr(value);
     const result = this.exactSet[normalizedValue];
     if (result) {
@@ -131,11 +131,9 @@ fuzzyset.__get = function (value, gramSize, minMatchScore) {
             for (let i = 0; i < this.matchDict[gram].length; i += 1) {
                 const index = this.matchDict[gram][i][0];
                 const otherGramCount = this.matchDict[gram][i][1];
-                if (index in matches) {
-                    matches[index] += gramCount * otherGramCount;
-                } else {
-                    matches[index] = gramCount * otherGramCount;
-                }
+                matches[index] = index in matches
+                    ? matches[index] += gramCount * otherGramCount
+                    : gramCount * otherGramCount;
             }
         }
     }
@@ -144,12 +142,11 @@ fuzzyset.__get = function (value, gramSize, minMatchScore) {
 
     const vectorNormal = Math.sqrt(sumOfSquareGramCounts);
     let results = [];
-    let matchScore;
     // build a results list of [score, str]
-    for (const matchIndex in matches) {
-        matchScore = matches[matchIndex];
+    Object.keys(matches).forEach((matchIndex) => {
+        const matchScore = matches[matchIndex];
         results.push([matchScore / (vectorNormal * items[matchIndex][0]), items[matchIndex][1]]);
-    }
+    });
 
     results.sort(sortDescending);
 
@@ -172,7 +169,7 @@ fuzzyset.__get = function (value, gramSize, minMatchScore) {
     return newResults;
 };
 
-fuzzyset._add = function(value, gramSize) {
+fuzzyset._add = function _add(value, gramSize) {
     const normalizedValue = _normalizeStr(value.string);
     const items = this.items[gramSize] || [];
     const index = items.length;
@@ -182,7 +179,7 @@ fuzzyset._add = function(value, gramSize) {
     let sumOfSquareGramCounts = 0;
     let gramCount;
 
-    for (const gram in gramCounts) {
+    Object.keys(gramCounts).forEach((gram) => {
         gramCount = gramCounts[gram];
         sumOfSquareGramCounts += gramCount ** 2;
         if (gram in this.matchDict) {
@@ -190,14 +187,14 @@ fuzzyset._add = function(value, gramSize) {
         } else {
             this.matchDict[gram] = [[index, gramCount]];
         }
-    }
+    });
     const vectorNormal = Math.sqrt(sumOfSquareGramCounts);
     items[index] = [vectorNormal, normalizedValue];
     this.items[gramSize] = items;
     this.exactSet[normalizedValue] = value;
 };
 
-fuzzyset.add = function (value) {
+fuzzyset.add = function add(value) {
     if (value.string === null) return false;
     const normalizedValue = _normalizeStr(value.string);
     if (normalizedValue in this.exactSet) {

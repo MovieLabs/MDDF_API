@@ -5,9 +5,8 @@ info:
   description: "API for sending and delivering MDDF metadata and Avails"
   termsOfService: ''
   contact:
-    name: MovieLbas
-    email: help@movielabs.com
-    url: www.movielabs.com
+    name: "MovieLabs"
+    url: "https://movielabs.com/md/"
   license:
     name: Apache 2.0
 servers:
@@ -31,17 +30,17 @@ paths:
         - $ref: '#/components/parameters/contentId'
       responses:
         '200':
-          description: Successful
+          description: "Successful"
           content:
             application/xml:
               schema:
                 $ref: "#/components/schemas/mecResource"
         '404':
-          description: Resource not found
+          description: "Failed: Resource not found"
           content:
-            text/plain:
+            application/xml:
               schema:
-                $ref: "#/components/schemas/404"
+                $ref: "#/components/schemas/error"
     post:
       tags:
         - MEC Operations
@@ -59,11 +58,17 @@ paths:
             example: '<?xml version="1.0" encoding="UTF-8"?>'
       responses:
         '201':
-          description: Successful
+          description: "Successful"
           content:
-            text/plain:
+            application/xml:
               schema:
-                $ref: "#/components/schemas/201"
+                $ref: "#/components/schemas/error"
+        '209':
+          description: "Resource already exists"
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/error"
     put:
       tags:
         - MEC Operations
@@ -72,28 +77,62 @@ paths:
       parameters:
         - $ref: "#/components/parameters/contentId"
       requestBody:
-        $ref: "#/components/requestBodies/mecResource"
+        description: 'MEC request body'
+        required: true
+        content:
+          application/xml:
+            schema:
+              type: string
+            example: '<?xml version="1.0" encoding="UTF-8"?>'
       responses:
         '200':
-          description: Successful
+          description: "Successful"
           content:
-            text/plain:
+            application/xml:
               schema:
-                $ref: "#/components/schemas/200"
+                $ref: "#/components/schemas/successResponse"
+        '404':
+          description: "Failed: Resource not found"
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/error"
     delete:
       tags:
         - MEC Operations
-      description: "Given valid CoreMetadata the resources server will update a resource associated with this endpoint  "
+      description: "Given valid CoreMetadata the resources server will update a resource associated with this endpoint"
       operationId: mecDeleteResource
       parameters:
         - $ref: "#/components/parameters/contentId"
       responses:
         '200':
-          description: Successful
+          description: "Successful"
           content:
-            text/plain:
+            application/xml:
               schema:
-                $ref: "#/components/schemas/200"
+                $ref: "#/components/schemas/successResponse"
+        '204':
+          description: "No Content"
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/error"
+  '/mec/getcount':
+    get:
+      tags:
+        - MEC Operations
+      description: "Returns the total number of MEC resources available"
+      operationId: mecGetCount
+      responses:
+        '200':
+          description: "Total number of MEC resources"
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/resourceCount"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/resourceCount"
   '/artwork/{resourceId}':
     get:
       tags:
@@ -108,19 +147,47 @@ paths:
           required: true
           schema:
             type: string
+        - name: "width"
+          description: "The width of the requested image"
+          example: "200"
+          in: query
+          required: false
+          schema:
+            type: number
+        - name: "height"
+          description: "The height of the requested image"
+          example: "200"
+          in: query
+          required: false
+          schema:
+            type: number
+        - name: "language"
+          description: "The language used in the artwork"
+          example: "en"
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: "country"
+          description: "The country where the artwork was used"
+          example: "US"
+          in: query
+          required: false
+          schema:
+            type: string
       responses:
         '200':
-          description: Successful
+          description: "Successful"
           content:
             image/png:
               schema:
                 $ref: "#/components/schemas/mecResource"
         '404':
-          description: Resource not found
+          description: "Failed: Resource not found"
           content:
-            text/plain:
+            application/xml:
               schema:
-                $ref: "#/components/schemas/404"
+                $ref: "#/components/schemas/error"
   '/mecmap/{contentId}':
     get:
       tags:
@@ -131,17 +198,17 @@ paths:
         - $ref: '#/components/parameters/contentId'
       responses:
         '200':
-          description: Successful
+          description: "Successful"
           content:
             application/xml:
               schema:
                 $ref: "#/components/schemas/mecResource"
         '404':
-          description: Resource not found
+          description: "Failed: Resource not found"
           content:
-            text/plain:
+            application/xml:
               schema:
-                $ref: "#/components/schemas/404"
+                $ref: "#/components/schemas/error"
   '/search':
     get:
       tags:
@@ -150,7 +217,7 @@ paths:
       operationId: searchTitles
       parameters:
         - name: "searchQuery"
-          description: "String to fuzzy match to the titles in the MEC database"
+          description: "String to fuzzy match to the titles in the MEC helpers"
           example: "mission"
           in: query
           required: true
@@ -158,23 +225,26 @@ paths:
             type: string
       responses:
         '200':
-          description: Successful
+          description: "Successful"
           content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/search"
             application/json:
               schema:
                 $ref: "#/components/schemas/search"
         '404':
-          description: Resource not found
+          description: "Failed: Resource not found"
           content:
-            text/plain:
+            application/xml:
               schema:
-                $ref: "#/components/schemas/404"
+                $ref: "#/components/schemas/error"
 components:
   parameters:
     contentId:
       name: "contentId"
       description: "An identifier that uniquely identifies the desired resource"
-      example: "urn_dece_cid_eidr-s_0000-1111-2222-3333-TEST-3"
+      example: "md:cid:org:number.hbo.com:787232"
       in: path
       required: true
       schema:
@@ -192,23 +262,124 @@ components:
           example: '<?xml version="1.0" encoding="UTF-8"?>'
 
   schemas:
-    200:
-      type: string
-
-    201:
-      type: string
-
-    404:
-      title: "Resource does not exist"
-      type: string
-      example: "Resource not found"
-
     mecResource:
       type: string
       example: '<?xml version="1.0" encoding="UTF-8"?>'
 
+    resourceCount:
+      type: object
+      properties:
+        count:
+          type: number
+          description: 'The total number of resources of this type'
+          xml:
+            name: "Count"
+        resourceType:
+          type: string
+          description: 'The type of resource to which the count applies'
+          xml:
+            name: "ResourceType"
+      xml:
+        name: "Response"
+
+    successResponse:
+      type: object
+      properties:
+        responseCode:
+          type: number
+          description: 'A numeric code indicating the type of response'
+          xml:
+            name: "ResponseCode"
+        message:
+          type: string
+          description: 'A written description of the action taken by the API'
+          xml:
+            name: "Message"
+        resource:
+          type: string
+          description: 'The resource URL responsible for the response'
+          xml:
+            name: "Resource"
+        moreInfo:
+          type: string
+          description: 'Additional information that may provide value to the client (optional)'
+          xml:
+            name: "MoreInfo"
+        ref:
+          type: string
+          description: 'A transaction reference for referencing logs or status updates (optional)'
+          xml:
+            name: "Ref"
+      xml:
+        name: "Response"
+
+    error:
+      type: object
+      properties:
+        errorCode:
+          type: number
+          description: 'A numeric error code associated with the error'
+          xml:
+            name: "ErrorCode"
+        message:
+          type: string
+          description: 'A written description of the error encountered'
+          xml:
+            name: "Message"
+        resource:
+          type: string
+          description: 'The resource URL causing the error'
+          xml:
+            name: "Resource"
+        moreInfo:
+          type: string
+          description: 'Additional information that may provide value to the client (optional)'
+          xml:
+            name: "MoreInfo"
+        ref:
+          type: string
+          description: 'A transaction reference for referencing logs or status updates (optional)'
+          xml:
+            name: "Ref"
+      xml:
+        name: "Error"
+
     search:
-      type: array
+      type: object
+      properties:
+        score:
+          type: number
+          description: 'A score based on the closeness of the title name to the search request'
+          xml:
+            name: "Score"
+        name:
+          type: string
+          description: 'The name of the creative work'
+          xml:
+            name: "Name"
+        contentId:
+          type: string
+          description: 'The full id for the creative work, this can be used to request the asset'
+          xml:
+            name: "ContentId"
+        type:
+          type: string
+          description: 'The referent type of the creative work'
+          xml:
+            name: "Type"
+        fileName:
+          type: string
+          description: 'The filename backing the resource'
+          xml:
+            name: "FileName"
+        parentEidr:
+          type: string
+          description: 'The EIDR id for the parent asset of this creative work (optional)'
+          xml:
+            name: "ParentEIDR"
+
+
+
 
 
 
