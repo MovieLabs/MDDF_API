@@ -16,6 +16,7 @@ const swaggerUi = require('swagger-ui-express');
 const yaml = require('yamljs');
 const { initialize } = require('express-openapi');
 const mecController = require('./api/controllers/mec');
+const mmcController = require('./api/controllers/mmc');
 const artworkController = require('./api/controllers/artwork');
 const mecMapController = require('./api/controllers/mec_map');
 const searchController = require('./api/controllers/search');
@@ -100,6 +101,11 @@ async function initApplication() {
             mecPostResource: mecController.mecPostResource,
             mecPutResource: mecController.mecPutResource,
             mecDeleteResource: mecController.mecDeleteResource,
+            mmcGetCount: mmcController.mmcGetResource,
+            mmcGetResource: mmcController.mmcGetResource,
+            mmcPostResource: mmcController.mmcPostResource,
+            mmcPutResource: mmcController.mmcPutResource,
+            mmcDeleteResource: mmcController.mmcDeleteResource,
             artworkGetResource: artworkController.artGetResource,
             mecMapResource: mecMapController.mecMapResource,
             searchTitles: searchController.getSearch,
