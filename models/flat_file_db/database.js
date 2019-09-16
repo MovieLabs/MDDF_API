@@ -4,7 +4,7 @@
  */
 
 const path = require('path');
-const io = require('./io'); // File with various io handlers
+const io = require('../../helpers/io'); // File with various io handlers
 const createMappings = require('./create_mappings');
 
 // Build the correct path based on the resource type
@@ -37,9 +37,7 @@ async function find(params) {
     const interfaces = {
         mec: loadXmlResource,
         mmc: loadXmlResource,
-        artwork: async () => {
-            return io.streamImage(resourceId, resourcePath.call(this, resourceType));
-        },
+        artwork: async () => io.streamImage(resourceId, resourcePath.call(this, resourceType)),
         avail: () => {
         },
         uv: loadXmlResource,
@@ -66,11 +64,11 @@ async function find(params) {
 
 async function save(params) {
     const {
-        fileName,
         resourceId,
         resourceType,
         resource,
     } = params;
+    let { fileName } = params;
 
     if (fileName === undefined) fileName = resourceId;
 
@@ -230,9 +228,7 @@ async function create(dbConfig) {
         // Load the current mapping file for a resource and create initial configurations
         try {
             const { fileName, filePath } = resourceMap[resourceTypes[i]];
-            console.log(`Mapping file: ${fileName}`);
             const resourceMappingFile = await loadMapping(fileName, filePath);
-            console.log(`Loaded`);
             resourceMap[resourceTypes[i]].fileMap = createFileMap(resourceTypes[i], resourceMappingFile);
 
             // Take the contents of the current directory, and double check the mappings are all up to date

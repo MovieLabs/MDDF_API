@@ -3,7 +3,6 @@
  * @desc Handles functions related to the 'Artwork' route.
  */
 
-const path = require('path');
 const io = require('../../helpers/io');
 const eidrMap = require('../../logs/eidrMap');
 

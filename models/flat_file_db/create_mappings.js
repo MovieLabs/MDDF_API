@@ -7,7 +7,7 @@
 const path = require('path');
 const fetch = require('node-fetch');
 const convert = require('xml-js');
-const io = require('./io');
+const io = require('../../helpers/io');
 
 // Base url for retrieving an EIDR record
 const eidrBaseURL = 'https://resolve.eidr.org:443/EIDR/object/';
@@ -64,14 +64,12 @@ async function resolveParent(eidrRecord) {
     const parentField = eidrRecord.FullMetadata.ExtraObjectMetadata || null;
     let parentEidr = null;
     if (parentField !== undefined && parentField !== null) {
-
         const objectTypes = Object.keys(parentField);
         const hasParent = parentTypes.filter(p => objectTypes.includes(p));
         if (hasParent.length !== 0) {
             parentEidr = parentField[hasParent[0]].Parent._text;
             console.log(`ParentId: ${parentEidr}`);
-            const parentRecord = await resolveParent(eidrParent(parentEidr));
-            return parentRecord;
+            return resolveParent(eidrParent(parentEidr));
         }
     }
 
@@ -101,6 +99,9 @@ async function lookupAltId(contentId) {
     return null;
 }
 
+async function artWorkMap(fileName, resourceType, database) {
+    return getContentId(fileName, resourceType, database);
+}
 
 /**
  * Lookup the EIDR records in the Ultraviolet directory
@@ -162,6 +163,7 @@ async function create(params) {
             return contentId === null ? null : { contentId, fileName };
         },
         uv: async (fileName) => {
+            artWorkMap(fileName, resourceType, database);
             return uvMap(fileName, resourceType, database);
         },
         test: async (fileName) => {

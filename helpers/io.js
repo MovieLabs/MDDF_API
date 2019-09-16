@@ -70,9 +70,7 @@ async function streamImage(fileName, pathName) {
     const fullPath = path.join(`${pathName}`, `${fileName}`);
     console.log(`Trying to stream ${fullPath}`);
     try {
-        const stream = fs.createReadStream(fullPath);
-        console.log('Created a stream');
-        return stream;
+        return fs.createReadStream(fullPath);
     } catch (err) {
         console.log(err);
         throw (err);
@@ -107,7 +105,6 @@ async function loadJSON(fileName, pathName = '') {
     return new Promise((resolve, reject) => {
         fs.readFile(fullPath, 'utf8', (err, res) => {
             if (err !== null) {
-                console.log(err);
                 reject(err);
             } else {
                 resolve(JSON.parse(res));

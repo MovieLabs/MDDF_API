@@ -4,10 +4,8 @@
  * @param res
  * @param req
  */
-console.log('Load map at Mec-Map');
-const path = require('path');
-const io = require('../../helpers/io');
-const action = require('../../helpers/actions');
+
+const action = require('../../services/api_actions/actions');
 const eidrMap = require('../../logs/uvFileMap');
 
 // Create mapping of a parent ID to a sibling that we have a record for
@@ -16,9 +14,6 @@ const resourceKeys = Object.keys(eidrMap);
 const countType = {};
 const movies = [];
 resourceKeys.forEach((key) => {
-    if (parentMap.hasOwnProperty(eidrMap[key].parentEidr)) {
-        //console.log('Series');
-    }
     parentMap[eidrMap[key].parentEidr] = eidrMap[key];
     countType[eidrMap[key].parentType] = (countType[eidrMap[key].parentType] += 1) || 1;
     if (eidrMap[key].type === 'Movie') movies.push(eidrMap[key].parentEidr); // All uv movies

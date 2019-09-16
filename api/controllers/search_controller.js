@@ -1,4 +1,4 @@
-const titleSearch = require('../../helpers/title_search');
+const titleSearch = require('../../services/search/title_search');
 
 const eidrMap = require('../../logs/uvFileMap');
 
