@@ -35,6 +35,57 @@ async function getContentId(filename, resourceType = 'mec', database) {
     return xmlId !== null ? xmlId[1] : null;
 }
 
+// Convert the uv XML data to JSON
+function process(xmlData) {
+    const xmlConfig = {
+        compact: true,
+        elementNameFn: val => val.replace('md:', ''),
+        alwaysChildren: true,
+        ignoreComment: true,
+    };
+    return convert.xml2js(xmlData, xmlConfig);
+}
+
+async function getArtworkRef(filename, resourceType = 'mec', database) {
+    // Load the XML file data
+    const xmlData = await database.find({ resourceId: filename, resourceType: 'mec' });
+    const jsonData = process(xmlData);
+    const artReferences = [];
+
+    if (jsonData.hasOwnProperty('BasicAsset') && jsonData.BasicAsset.hasOwnProperty('BasicData')) {
+        const allReferences = {};
+        let localized = jsonData.BasicAsset.BasicData.LocalizedInfo || [];
+        localized = Array.isArray(localized) ? localized : [localized];
+        localized.forEach((localAsset) => {
+            if (localAsset.hasOwnProperty('ArtReference')) {
+                const { language } = localAsset._attributes;
+                allReferences[language] = Array.isArray(localAsset.ArtReference)
+                    ? localAsset.ArtReference
+                    : [localAsset.ArtReference];
+            }
+        });
+        const langKeys = Object.keys(allReferences);
+        langKeys.forEach((lang) => {
+            allReferences[lang].forEach((artRef) => {
+                const contentId = artRef._text.includes('https:') ? artRef._text.match(/artwork\/(.+?)$/)[1] : null;
+                if (contentId !== null) {
+                    const x = artRef._attributes.resolution.split('x')[0];
+                    const y = artRef._attributes.resolution.split('x')[1];
+                    artReferences.push({
+                        language: lang,
+                        x,
+                        y,
+                        contentId,
+                        fileName: `${filename}.${lang}.${x}x${y}.png`,
+                    });
+                }
+            });
+        });
+    }
+    return artReferences;
+}
+
+
 // Lookup the parent id for an EIDR passed in
 async function eidrParent(id) {
     const resolveURL = `${eidrBaseURL}${id}`;
@@ -100,7 +151,8 @@ async function lookupAltId(contentId) {
 }
 
 async function artWorkMap(fileName, resourceType, database) {
-    return getContentId(fileName, resourceType, database);
+    const artReference = await getArtworkRef(fileName, resourceType, database);
+    return artReference;
 }
 
 /**
@@ -137,7 +189,6 @@ async function uvMap(fileName, resourceType, database) {
     return mapping;
 }
 
-
 /**
  * Create a mapping from examining all the files in a given directory
  * @param params
@@ -154,18 +205,13 @@ async function create(params) {
 
     // A mapper for each type
     const mapType = {
-        mec: async (fileName) => {
-            const contentId = await getContentId(fileName, resourceType, database);
-            return contentId === null ? null : { contentId, fileName };
-        },
+        mec: async fileName => getContentId(fileName, resourceType, database),
         mmc: async (fileName) => {
             const contentId = await getContentId(fileName, resourceType, database);
             return contentId === null ? null : { contentId, fileName };
         },
-        uv: async (fileName) => {
-            artWorkMap(fileName, resourceType, database);
-            return uvMap(fileName, resourceType, database);
-        },
+        uv: async fileName => uvMap(fileName, resourceType, database),
+        artwork: async fileName => artWorkMap(fileName, resourceType, database),
         test: async (fileName) => {
             const contentId = await getContentId(fileName, resourceType, database);
             return contentId === null ? null : { contentId, fileName };
@@ -177,7 +223,7 @@ async function create(params) {
         const fileName = fileList[i];
         if (!curFileMap.hasOwnProperty(fileName)) {
             // If this file is not in the current map, then check it
-            console.log(`${i} / ${fileList.length} Try to load ${fileName}`);
+            console.log(`${i} / ${fileList.length} Checking: ${fileName}`);
             try {
                 const res = await mapType[resourceType](fileName);
                 if (res !== null) curFileMap[fileName] = res;
@@ -186,6 +232,7 @@ async function create(params) {
             }
         }
     }
+
     // Save out the new mappings for any re-loading
     const { fileName, filePath } = database.resourceMappings[resourceType];
     const fullPath = path.join(io.currentPath(), filePath, fileName);

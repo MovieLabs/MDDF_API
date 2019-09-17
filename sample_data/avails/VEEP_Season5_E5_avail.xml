@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AvailList xmlns="http://www.movielabs.com/schema/avails/v2.4/avails" xmlns:md="http://www.movielabs.com/schema/md/v2.7/md" xmlns:mdmec="http://www.movielabs.com/schema/mdmec/v2.7" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.movielabs.com/schema/avails/v2.4/avails avails-v2.4.xsd">
+	<Avail>
+		<ALID>md:alid:org:number.hbo.com:787232</ALID>
+		<Disposition>
+			<EntryType>Full Extract</EntryType>
+			<IssueDate>2016-09-23</IssueDate>
+		</Disposition>
+		<Licensor>
+			<md:DisplayName>HBO</md:DisplayName>
+			<mdmec:ContactInfo>
+				<md:Name>Dilligent Engineer</md:Name>
+				<md:PrimaryEmail>dilligent.engineer@hbo.com</md:PrimaryEmail>
+			</mdmec:ContactInfo>
+		</Licensor>
+		<AvailType>Episode</AvailType>
+		<ShortDescription>Veep S5_E5</ShortDescription>
+		<Asset contentID="md:cid:org:number.hbo.com:787232">
+			<WorkType>Episode</WorkType>
+			<Metadata>
+				<TitleDisplayUnlimited>VEEP</TitleDisplayUnlimited>
+				<TitleInternalAlias>VEEP</TitleInternalAlias>
+				<VersionDescription>International HE</VersionDescription>
+				<ReleaseDate>2016-05-22</ReleaseDate>
+				<RunLength>PT28M</RunLength>
+				<Ratings>
+					<md:Rating>
+						<md:Region>
+							<md:country>DE</md:country>
+						</md:Region>
+						<md:System>FSK</md:System>
+						<md:Value>16</md:Value>
+					</md:Rating>
+				</Ratings>
+			</Metadata>
+		</Asset>
+		<Transaction>
+			<LicenseType>EST</LicenseType>
+			<Description/>
+			<Territory>
+				<md:country>DE</md:country>
+			</Territory>
+			<Start>2036-08-31T00:00:00</Start>
+			<EndCondition>Open</EndCondition>
+			<AllowedLanguage>de</AllowedLanguage>
+			<LicenseRightsDescription>Library</LicenseRightsDescription>
+			<FormatProfile>HD</FormatProfile>
+			<Term termName="WSP">
+				<Money currency="EUR">999.99</Money>
+			</Term>
+		</Transaction>
+		<Transaction>
+			<LicenseType>EST</LicenseType>
+			<Description/>
+			<Territory>
+				<md:country>DE</md:country>
+			</Territory>
+			<Start>2036-08-31T00:00:00</Start>
+			<EndCondition>Open</EndCondition>
+			<AllowedLanguage>en</AllowedLanguage>
+			<LicenseRightsDescription>Library</LicenseRightsDescription>
+			<FormatProfile>HD</FormatProfile>
+			<Term termName="WSP">
+				<Money currency="EUR">999.99</Money>
+			</Term>
+		</Transaction>
+	</Avail>
+</AvailList>

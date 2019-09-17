@@ -34,12 +34,16 @@ async function find(params) {
         return io.XML(fileName, resourcePath.call(this, resourceType));
     };
 
+    const streamImage = async () => {
+        const fileName = fileMap.hasOwnProperty(resourceId) ? fileMap[resourceId] : resourceId;
+        return io.streamImage(fileName, resourcePath.call(this, resourceType));
+    };
+
     const interfaces = {
         mec: loadXmlResource,
         mmc: loadXmlResource,
-        artwork: async () => io.streamImage(resourceId, resourcePath.call(this, resourceType)),
-        avail: () => {
-        },
+        artwork: streamImage,
+        avail: () => {},
         uv: loadXmlResource,
         test: loadXmlResource,
     };
@@ -196,9 +200,12 @@ function createFileMap(resourceType, resourceMappingFile) {
     const fileMap = {};
     const fileKeys = Object.keys(resourceMappingFile);
     fileKeys.forEach((key) => {
-        if (resourceMappingFile[key].hasOwnProperty('contentId')) {
-            fileMap[resourceMappingFile[key].contentId] = key;
-        }
+        const rMap = Array.isArray(resourceMappingFile[key]) ? resourceMappingFile[key] : [resourceMappingFile[key]];
+        rMap.forEach((map) => {
+            if (map.hasOwnProperty('contentId')) {
+                fileMap[map.contentId] = map.fileName;
+            }
+        });
     });
     return fileMap;
 }
@@ -232,7 +239,8 @@ async function create(dbConfig) {
             resourceMap[resourceTypes[i]].fileMap = createFileMap(resourceTypes[i], resourceMappingFile);
 
             // Take the contents of the current directory, and double check the mappings are all up to date
-            const fileList = await newDb.dir({ resourceType: resourceTypes[i] });
+            // const fileList = await newDb.dir({ resourceType: resourceTypes[i] });
+            const fileList = await newDb.dir({ resourceType: resourceMap[resourceTypes[i]].sourceType });
             const mapParams = {
                 database: newDb,
                 resourceType: resourceTypes[i],

@@ -6,7 +6,10 @@
  */
 
 const action = require('../../services/api_actions/actions');
-const eidrMap = require('../../logs/uvFileMap');
+const { errorResponse } = require('../responses/errors_response');
+const { ApiError } = require('../../loaders/errors_loader');
+const { serverError } = require('../responses/errors_response');
+const eidrMap = require('../../models/flat_file_db/file_maps/uvFileMap');
 
 // Create mapping of a parent ID to a sibling that we have a record for
 const parentMap = {};
@@ -35,29 +38,43 @@ async function checkMapping(params) {
     }
 }
 
-async function selectResource(params) {
-    const contentId = await checkMapping(params);
-    params.resourceId = contentId; // Use either the id sent in or a child of the id if it is a parent
-    action.sendResource(params);
-}
-
 /**
  * Retrieve a specific resource using http GET
  * If an EIDR, or parent EIDR is provided as the contentId, it will be mapped to a resource in the database
  * @param req {object} - The express request object
  * @param res {object} - The express response object
  */
-function mecMapResource(req, res) {
+async function mecMapResource(req, res) {
     const { database } = this.dependencies;
+
     const params = {
         database,
         resourceId: req.params.contentId,
         resourceType: 'mec',
-        req,
-        res,
+        applicationType: 'xml',
     };
-    selectResource(params);
+
+    try {
+        const contentId = await checkMapping(params);
+        params.resourceId = contentId; // Use either the id sent in or a child of the id if it is a parent
+        const response = await action.sendResource(params);
+        res.status(200)
+        .type(`application/${response.applicationType}`)
+        .send(response.resource);
+    } catch (error) {
+        if (error instanceof ApiError) {
+            const errResponse = Object.assign(error, {
+                applicationType: 'application/xml',
+                res,
+            });
+            return errorResponse(errResponse);
+        }
+        console.log(error);
+        return serverError(res);
+    }
+    return {};
 }
+
 
 module.exports = {
     mecMapResource,

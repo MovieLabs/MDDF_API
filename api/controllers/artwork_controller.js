@@ -4,7 +4,7 @@
  */
 
 const io = require('../../helpers/io');
-const eidrMap = require('../../logs/eidrMap');
+const eidrMap = require('../../models/flat_file_db/file_maps/uvFileMap');
 
 // Identify EIDR id in string
 const eidrRegX = /([A-F0-9]{4}-){5}[A-Z0-9]/;
@@ -33,8 +33,8 @@ async function sendResource(params) {
     } catch (err) {
         console.log(err);
         res.status(404)
-           .type('plain/text')
-           .send('Resource not found');
+        .type('plain/text')
+        .send('Resource not found');
     }
 }
 
@@ -85,7 +85,7 @@ async function mapArtwork(params) {
     const { res, query, resourceId } = params;
 
     const eidrMatch = resourceId.match(eidrRegX); // If filename has EIDR in it, add to array
-    let eidrId = eidrMatch[0] !== undefined ? eidrMatch[0] : null;
+    let eidrId = eidrMatch !== null ? eidrMatch[0] : null;
 
     if (eidrId !== null) {
         // Is the EIDR a parent id, if so map to the UV asset
@@ -98,10 +98,12 @@ async function mapArtwork(params) {
         const closestArt = findClosestSize(artAssets, query.width, query.height);
         params.resourceId = `${closestArt.fileName}`;
         await sendResource(params);
+    } else if (resourceId !== null) {
+        await sendResource(params);
     } else {
         res.status(404)
-            .type('plain/text')
-            .send('Resource not found');
+        .type('plain/text')
+        .send('Resource not found');
     }
 }
 
@@ -111,14 +113,14 @@ async function mapArtwork(params) {
  * @param {object} res - Response object from express
  */
 
-function artGetResource(req, res) {
-    const { resourceId } = req.params.trim();
+async function artGetResource(req, res) {
+    const { resourceId } = req.params;
     const { query } = req;
     const { database } = this.dependencies;
 
     mapArtwork({
         database,
-        resourceId,
+        resourceId: resourceId.trim(),
         query,
         resourceType: 'artwork',
         req,

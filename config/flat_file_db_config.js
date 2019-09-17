@@ -13,29 +13,34 @@ module.exports = {
         test: process.env.TEST_PATH,
     },
     resourceMappings: {
-        uv: {
-            filePath: 'models/flat_file_db/file_maps',
-            fileName: 'uvFileMap',
-            mapping: {},
-        },
         mec: {
             filePath: 'models/flat_file_db/file_maps',
             fileName: 'mecMap',
+            sourceType: 'mec',
             mapping: {},
         },
         mmc: {
             filePath: 'models/flat_file_db/file_maps',
             fileName: 'mmcMap',
+            sourceType: 'mmc',
             mapping: {},
         },
-//            artwork: {
-//                filePath: 'models/flat_file_db/file_maps',
-//                fileName: 'artworkMap',
-//                mapping: {},
-//            },
+        artwork: {
+            filePath: 'models/flat_file_db/file_maps',
+            fileName: 'artworkMap',
+            sourceType: 'mec',
+            mapping: {},
+        },
+        uv: {
+            filePath: 'models/flat_file_db/file_maps',
+            fileName: 'uvFileMap',
+            sourceType: 'uv',
+            mapping: {},
+        },
         test: {
             filePath: 'models/flat_file_db/file_maps',
             fileName: 'testMap',
+            sourceType: 'test',
             mapping: {},
         },
     },

@@ -42,14 +42,14 @@ async function executeAction(actionFunc, params) {
 async function mecGetResource(req, res) {
     const { contentId } = req.params; // The content id of the requested resource
     const { database } = this.dependencies; // The injected database interface
-
+    
     const params = {
         database,
         resourceId: contentId,
         resourceType: 'mec',
         applicationType: 'xml',
     };
-
+    
     try {
         if (contentId.toLowerCase() === 'getcount') {
             // A count of the resources was requested
@@ -60,14 +60,14 @@ async function mecGetResource(req, res) {
                 + `<ResourceType>${response.resourceType}</ResourceType>`
                 + '</Response>';
             res.status(200)
-               .type('application/xml')
-               .send(xmlResponse);
+                .type('application/xml')
+                .send(xmlResponse);
         } else {
             // A contentID and request for the resource was submitted
             const response = await action.sendResource(params);
             res.status(200)
-               .type(`application/${response.applicationType}`)
-               .send(response.resource);
+                .type(`application/${response.applicationType}`)
+                .send(response.resource);
         }
     } catch (err) {
         if (err instanceof ApiError) {
@@ -92,7 +92,7 @@ async function mecPutResource(req, res) {
     const { contentId } = req.params; // The content id of the resource to add
     const { database } = this.dependencies; // The injected database interface
     console.log(`Update the resource for: ${contentId}`);
-
+    
     const params = {
         database,
         resource: req.body, // The XML data to be added
@@ -113,7 +113,7 @@ async function mecDeleteResource(req, res) {
     const { contentId } = req.params; // The content id of the resource to be deleted
     const { database } = this.dependencies; // The injected database interface
     console.log(`Delete the resource for: ${contentId}`);
-
+    
     const params = {
         database,
         resourceId: contentId,
@@ -133,7 +133,7 @@ async function mecPostResource(req, res) {
     const { contentId } = req.params;
     const { database } = this.dependencies;
     console.log(`Create the resource for: ${contentId}`);
-
+    
     const params = {
         database,
         resource: req.body,
