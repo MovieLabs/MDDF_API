@@ -1,6 +1,9 @@
-const fuzzyset = {};
+/**
+ * @module
+ * @desc A fuzzy search algorithm
+ */
 
-// helper functions
+const fuzzyset = {};
 
 // Dos this object have any property keys
 const isEmptyObject = obj => Object.keys(obj).length === 0;
@@ -11,7 +14,7 @@ const _normalizeStr = (str) => {
         throw 'Must use a string as argument to FuzzySet functions';
     }
     return str.trim()
-              .toLowerCase();
+        .toLowerCase();
 };
 
 // Sort array of results into descending order
@@ -22,7 +25,7 @@ function levenshtein(str1, str2) {
     let prev;
     let value;
 
-    for (let i = 0; i <= str2.length; i += 1)
+    for (let i = 0; i <= str2.length; i += 1) {
         for (let j = 0; j <= str1.length; j += 1) {
             if (i && j) {
                 if (str1.charAt(j - 1) === str2.charAt(i - 1)) {
@@ -37,6 +40,7 @@ function levenshtein(str1, str2) {
             prev = current[j];
             current[j] = value;
         }
+    }
 
     return current.pop();
 }
@@ -161,7 +165,7 @@ fuzzyset.__get = function (value, gramSize, minMatchScore) {
     }
 
     const newResults = [];
-    results.forEach(function (scoreWordPair) {
+    results.forEach(function(scoreWordPair) {
         if (scoreWordPair[0] >= minMatchScore) {
             newResults.push([scoreWordPair[0], this.exactSet[scoreWordPair[1]]]);
         }

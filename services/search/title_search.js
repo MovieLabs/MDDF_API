@@ -1,3 +1,9 @@
+/**
+ * @module
+ * @desc Initialize a search mechanism for locating titles by name
+ */
+
+
 const eidrMap = require('../../logs/uvFileMap');
 const fuzzySet = require('./fuzzy_set');
 
@@ -22,12 +28,13 @@ const config = {
     gramSizeLower: 2,
     gramSizeUpper: 3,
 };
+
 const titleSearch = fuzzySet(config);
 
-module.exports = function(searchQuery) {
+module.exports = function search(searchQuery) {
     const fuzzyMatch = titleSearch.get(searchQuery, null, 0.33);
 
-    const fuzzyMatchFormatted = fuzzyMatch.map(res => (
+    return fuzzyMatch.map(res => (
         {
             score: res[0],
             name: eidrMap[res[1].data].parentName,
@@ -37,5 +44,4 @@ module.exports = function(searchQuery) {
             parentEidr: eidrMap[res[1].data].parentEidr || 'N/A',
         }
     ));
-    return fuzzyMatchFormatted;
 };
