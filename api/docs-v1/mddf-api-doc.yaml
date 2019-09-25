@@ -270,14 +270,14 @@ paths:
           in: query
           required: false
           schema:
-            type: number
+            type: integer
         - name: "height"
           description: "The height of the requested image"
           example: "200"
           in: query
           required: false
           schema:
-            type: number
+            type: integer
         - name: "language"
           description: "The language used in the artwork"
           example: "en"
@@ -386,22 +386,22 @@ components:
         application/xml:
           schema:
             type: string
-          example: '<?xml version="1.0" encoding="UTF-8"?>'
+          example: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 
   schemas:
     mecResource:
       type: string
-      example: '<?xml version="1.0" encoding="UTF-8"?>'
+      example: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 
     mmcResource:
       type: string
-      example: '<?xml version="1.0" encoding="UTF-8"?>'
+      example: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 
     resourceCount:
       type: object
       properties:
         count:
-          type: number
+          type: integer
           description: 'The total number of resources of this type'
           xml:
             name: "Count"
