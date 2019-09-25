@@ -259,7 +259,7 @@ paths:
       parameters:
         - name: "resourceId"
           description: "An identifier that uniquely identifies the desired artwork resource"
-          example: "1BF1-A9C4-7D63-4A6C-E101-2.xml.de.192x288"
+          example: "md:imageid:org:number.hbo.com:787232:season-photo.de"
           in: path
           required: true
           schema:

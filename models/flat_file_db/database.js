@@ -36,6 +36,7 @@ async function find(params) {
 
     const streamImage = async () => {
         const fileName = fileMap.hasOwnProperty(resourceId) ? fileMap[resourceId] : resourceId;
+        console.log(fileName);
         return io.streamImage(fileName, resourcePath.call(this, resourceType));
     };
 

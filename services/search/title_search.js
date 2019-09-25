@@ -4,7 +4,7 @@
  */
 
 
-const eidrMap = require('../../logs/uvFileMap');
+const eidrMap = require('../../models/flat_file_db/file_maps/uvFileMap');
 const fuzzySet = require('./fuzzy_set');
 
 console.log('Indexing search');

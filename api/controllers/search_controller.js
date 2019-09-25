@@ -1,16 +1,5 @@
 const titleSearch = require('../../services/search/title_search');
 
-const eidrMap = require('../../logs/uvFileMap');
-
-// Create mapping of a parent ID to a sibling that we have a record for
-const parentMap = {};
-const eidrKeys = Object.keys(eidrMap);
-eidrKeys.forEach((key) => {
-    if (eidrMap[key].hasOwnProperty('parentEidr')) {
-        parentMap[eidrMap[key].parentEidr] = key;
-    }
-});
-
 async function sendResult(params) {
     const { res, result } = params;
     try {
