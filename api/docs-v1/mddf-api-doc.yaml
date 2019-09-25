@@ -3,7 +3,7 @@ info:
   version: 1.0.0
   title: MDDF-API
   description: "API for sending and delivering MDDF metadata and Avails"
-  termsOfService: ''
+  termsOfService: ""
   contact:
     name: "MovieLabs"
     url: "https://movielabs.com/md/"
@@ -22,22 +22,22 @@ tags:
   - name: Ancillary Operations
     description: "Additional API's useful in development - likely removed in final version"
 paths:
-  '/mec/{contentId}':
+  "/mec/{contentId}":
     get:
       tags:
         - MEC Operations
       description: "Returns an MEC resource to the requester"
       operationId: mecGetResource
       parameters:
-        - $ref: '#/components/parameters/mecContentId'
+        - $ref: "#/components/parameters/mecContentId"
       responses:
-        '200':
+        "200":
           description: "Successful"
           content:
             application/xml:
               schema:
                 $ref: "#/components/schemas/mecResource"
-        '404':
+        "404":
           description: "Failed: Resource not found"
           content:
             application/xml:
@@ -51,21 +51,21 @@ paths:
       parameters:
         - $ref: "#/components/parameters/mecContentId"
       requestBody:
-        description: 'MEC request body'
+        description: "MEC request body"
         required: true
         content:
           application/xml:
             schema:
               type: string
-            example: '<?xml version="1.0" encoding="UTF-8"?>'
+            example: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
       responses:
-        '201':
+        "201":
           description: "Successful"
           content:
             application/xml:
               schema:
                 $ref: "#/components/schemas/error"
-        '209':
+        "209":
           description: "Resource already exists"
           content:
             application/xml:
@@ -79,21 +79,21 @@ paths:
       parameters:
         - $ref: "#/components/parameters/mecContentId"
       requestBody:
-        description: 'MEC request body'
+        description: "MEC request body"
         required: true
         content:
           application/xml:
             schema:
               type: string
-            example: '<?xml version="1.0" encoding="UTF-8"?>'
+            example: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
       responses:
-        '200':
+        "200":
           description: "Successful"
           content:
             application/xml:
               schema:
                 $ref: "#/components/schemas/successResponse"
-        '404':
+        "404":
           description: "Failed: Resource not found"
           content:
             application/xml:
@@ -107,26 +107,26 @@ paths:
       parameters:
         - $ref: "#/components/parameters/mecContentId"
       responses:
-        '200':
+        "200":
           description: "Successful"
           content:
             application/xml:
               schema:
                 $ref: "#/components/schemas/successResponse"
-        '204':
+        "204":
           description: "No Content"
           content:
             application/xml:
               schema:
                 $ref: "#/components/schemas/error"
-  '/mec/getcount':
+  "/mec/getcount":
     get:
       tags:
         - MEC Operations
       description: "Returns the total number of MEC resources available"
       operationId: mecGetCount
       responses:
-        '200':
+        "200":
           description: "Total number of MEC resources"
           content:
             application/xml:
@@ -136,22 +136,22 @@ paths:
               schema:
                 $ref: "#/components/schemas/resourceCount"
 
-  '/mmc/{contentId}':
+  "/mmc/{contentId}":
     get:
       tags:
         - MMC Operations
       description: "Returns an Media Manifest for the selected resource to the requester"
       operationId: mmcGetResource
       parameters:
-        - $ref: '#/components/parameters/mmcContentId'
+        - $ref: "#/components/parameters/mmcContentId"
       responses:
-        '200':
+        "200":
           description: "Successful"
           content:
             application/xml:
               schema:
                 $ref: "#/components/schemas/mmcResource"
-        '404':
+        "404":
           description: "Failed: Resource not found"
           content:
             application/xml:
@@ -165,21 +165,21 @@ paths:
       parameters:
         - $ref: "#/components/parameters/mmcContentId"
       requestBody:
-        description: 'MEC request body'
+        description: "MEC request body"
         required: true
         content:
           application/xml:
             schema:
               type: string
-            example: '<?xml version="1.0" encoding="UTF-8"?>'
+            example: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
       responses:
-        '201':
+        "201":
           description: "Successful"
           content:
             application/xml:
               schema:
                 $ref: "#/components/schemas/error"
-        '209':
+        "209":
           description: "Resource already exists"
           content:
             application/xml:
@@ -193,21 +193,21 @@ paths:
       parameters:
         - $ref: "#/components/parameters/mmcContentId"
       requestBody:
-        description: 'Media Manifest request body'
+        description: "Media Manifest request body"
         required: true
         content:
           application/xml:
             schema:
               type: string
-            example: '<?xml version="1.0" encoding="UTF-8"?>'
+            example: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
       responses:
-        '200':
+        "200":
           description: "Successful"
           content:
             application/xml:
               schema:
                 $ref: "#/components/schemas/successResponse"
-        '404':
+        "404":
           description: "Failed: Resource not found"
           content:
             application/xml:
@@ -221,26 +221,26 @@ paths:
       parameters:
         - $ref: "#/components/parameters/mmcContentId"
       responses:
-        '200':
+        "200":
           description: "Successful"
           content:
             application/xml:
               schema:
                 $ref: "#/components/schemas/successResponse"
-        '204':
+        "204":
           description: "No Content"
           content:
             application/xml:
               schema:
                 $ref: "#/components/schemas/error"
-  '/mmc/getcount':
+  "/mmc/getcount":
     get:
       tags:
         - MMC Operations
       description: "Returns the total number of Media Manifest resources available"
       operationId: mmcGetCount
       responses:
-        '200':
+        "200":
           description: "Total number of MMC resources"
           content:
             application/xml:
@@ -250,7 +250,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/resourceCount"
 
-  '/artwork/{resourceId}':
+  "/artwork/{resourceId}":
     get:
       tags:
         - Ancillary Operations
@@ -293,41 +293,41 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: "Successful"
           content:
             image/png:
               schema:
                 $ref: "#/components/schemas/mecResource"
-        '404':
+        "404":
           description: "Failed: Resource not found"
           content:
             application/xml:
               schema:
                 $ref: "#/components/schemas/error"
 
-  '/mecmap/{contentId}':
+  "/mecmap/{contentId}":
     get:
       tags:
         - Ancillary Operations
       description: "If the content is not found, will also look for child works of the id"
       operationId: mecMapResource
       parameters:
-        - $ref: '#/components/parameters/mecContentId'
+        - $ref: "#/components/parameters/mecContentId"
       responses:
-        '200':
+        "200":
           description: "Successful"
           content:
             application/xml:
               schema:
                 $ref: "#/components/schemas/mecResource"
-        '404':
+        "404":
           description: "Failed: Resource not found"
           content:
             application/xml:
               schema:
                 $ref: "#/components/schemas/error"
-  '/search':
+  "/search":
     get:
       tags:
         - Ancillary Operations
@@ -342,7 +342,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: "Successful"
           content:
             application/xml:
@@ -351,7 +351,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/search"
-        '404':
+        "404":
           description: "Failed: Resource not found"
           content:
             application/xml:
@@ -380,7 +380,7 @@ components:
 
   requestBodies:
     mecResource:
-      description: 'Resource request body'
+      description: "Resource request body"
       required: true
       content:
         application/xml:
@@ -402,12 +402,12 @@ components:
       properties:
         count:
           type: integer
-          description: 'The total number of resources of this type'
+          description: "The total number of resources of this type"
           xml:
             name: "Count"
         resourceType:
           type: string
-          description: 'The type of resource to which the count applies'
+          description: "The type of resource to which the count applies"
           xml:
             name: "ResourceType"
       xml:
@@ -418,27 +418,27 @@ components:
       properties:
         responseCode:
           type: number
-          description: 'A numeric code indicating the type of response'
+          description: "A numeric code indicating the type of response"
           xml:
             name: "ResponseCode"
         message:
           type: string
-          description: 'A written description of the action taken by the API'
+          description: "A written description of the action taken by the API"
           xml:
             name: "Message"
         resource:
           type: string
-          description: 'The resource URL responsible for the response'
+          description: "The resource URL responsible for the response"
           xml:
             name: "Resource"
         moreInfo:
           type: string
-          description: 'Additional information that may provide value to the client (optional)'
+          description: "Additional information that may provide value to the client (optional)"
           xml:
             name: "MoreInfo"
         ref:
           type: string
-          description: 'A transaction reference for referencing logs or status updates (optional)'
+          description: "A transaction reference for referencing logs or status updates (optional)"
           xml:
             name: "Ref"
       xml:
@@ -449,27 +449,27 @@ components:
       properties:
         errorCode:
           type: number
-          description: 'A numeric error code associated with the error'
+          description: "A numeric error code associated with the error"
           xml:
             name: "ErrorCode"
         message:
           type: string
-          description: 'A written description of the error encountered'
+          description: "A written description of the error encountered"
           xml:
             name: "Message"
         resource:
           type: string
-          description: 'The resource URL causing the error'
+          description: "The resource URL causing the error"
           xml:
             name: "Resource"
         moreInfo:
           type: string
-          description: 'Additional information that may provide value to the client (optional)'
+          description: "Additional information that may provide value to the client (optional)"
           xml:
             name: "MoreInfo"
         ref:
           type: string
-          description: 'A transaction reference for referencing logs or status updates (optional)'
+          description: "A transaction reference for referencing logs or status updates (optional)"
           xml:
             name: "Ref"
       xml:
@@ -480,32 +480,32 @@ components:
       properties:
         score:
           type: number
-          description: 'A score based on the closeness of the title name to the search request'
+          description: "A score based on the closeness of the title name to the search request"
           xml:
             name: "Score"
         name:
           type: string
-          description: 'The name of the creative work'
+          description: "The name of the creative work"
           xml:
             name: "Name"
         contentId:
           type: string
-          description: 'The full id for the creative work, this can be used to request the asset'
+          description: "The full id for the creative work, this can be used to request the asset"
           xml:
             name: "ContentId"
         type:
           type: string
-          description: 'The referent type of the creative work'
+          description: "The referent type of the creative work"
           xml:
             name: "Type"
         fileName:
           type: string
-          description: 'The filename backing the resource'
+          description: "The filename backing the resource"
           xml:
             name: "FileName"
         parentEidr:
           type: string
-          description: 'The EIDR id for the parent asset of this creative work (optional)'
+          description: "The EIDR id for the parent asset of this creative work (optional)"
           xml:
             name: "ParentEIDR"
 
