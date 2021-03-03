@@ -16,7 +16,7 @@
     "http-errors": "^1.7.3",
     "morgan": "~1.9.0",
     "node-fetch": "^2.6.0",
-    "pug": "^2.0.4",
+    "pug": "^3.0.1",
     "swagger-ui-express": "^4.0.7",
     "xml-js": "^1.6.11",
     "yamljs": "^0.3.0"
